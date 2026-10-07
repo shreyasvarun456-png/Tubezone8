@@ -1,0 +1,1521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TubeZone</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    background: #0f0f0f;
+    color: #f1f1f1;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+    min-height: 100vh;
+}
+
+/* =========================
+   HEADER
+========================= */
+
+header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 0 18px;
+    background: #0f0f0f;
+    border-bottom: 1px solid #272727;
+}
+
+.logo {
+    font-size: 23px;
+    font-weight: 800;
+    color: white;
+    white-space: nowrap;
+}
+
+.logo span {
+    color: #ff0000;
+}
+
+.search-area {
+    display: flex;
+    flex: 1;
+    max-width: 700px;
+    margin: auto;
+}
+
+.search-area input {
+    flex: 1;
+    height: 42px;
+    padding: 0 16px;
+    border: 1px solid #303030;
+    border-right: none;
+    border-radius: 22px 0 0 22px;
+    outline: none;
+    background: #121212;
+    color: white;
+    font-size: 15px;
+}
+
+.search-area input:focus {
+    border-color: #3ea6ff;
+}
+
+.search-area button {
+    width: 65px;
+    border: 1px solid #303030;
+    border-radius: 0 22px 22px 0;
+    background: #272727;
+    color: white;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.search-area button:hover {
+    background: #3f3f3f;
+}
+
+.shorts-header-btn {
+    border: none;
+    background: #272727;
+    color: white;
+    padding: 11px 17px;
+    border-radius: 22px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.shorts-header-btn:hover {
+    background: #3f3f3f;
+}
+
+/* =========================
+   NAVIGATION
+========================= */
+
+nav {
+    display: flex;
+    gap: 9px;
+    padding: 12px 18px;
+    overflow-x: auto;
+    background: #0f0f0f;
+    border-bottom: 1px solid #272727;
+}
+
+nav::-webkit-scrollbar {
+    display: none;
+}
+
+.channel-button {
+    flex: 0 0 auto;
+    border: none;
+    background: #272727;
+    color: #f1f1f1;
+    padding: 9px 15px;
+    border-radius: 18px;
+    cursor: pointer;
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+.channel-button:hover {
+    background: #3f3f3f;
+}
+
+.channel-button.active {
+    background: #f1f1f1;
+    color: #0f0f0f;
+}
+
+/* =========================
+   MAIN
+========================= */
+
+main {
+    padding: 20px;
+    max-width: 1800px;
+    margin: auto;
+}
+
+.section-title {
+    margin: 5px 0 20px;
+    font-size: 22px;
+}
+
+/* =========================
+   VIDEO GRID
+========================= */
+
+.video-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 24px 16px;
+}
+
+.video-card {
+    min-width: 0;
+    cursor: pointer;
+}
+
+.thumbnail {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    display: block;
+    border-radius: 10px;
+    background: #181818;
+}
+
+.video-card:hover .thumbnail {
+    filter: brightness(0.88);
+}
+
+.video-info {
+    display: flex;
+    gap: 12px;
+    padding-top: 11px;
+}
+
+.channel-avatar {
+    width: 36px;
+    height: 36px;
+    flex: 0 0 36px;
+    border-radius: 50%;
+    background: #272727;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: #aaa;
+}
+
+.video-text {
+    min-width: 0;
+}
+
+.video-title {
+    margin: 0;
+    color: #f1f1f1;
+    font-size: 15px;
+    line-height: 1.35;
+    font-weight: 600;
+}
+
+.channel-name {
+    margin-top: 7px;
+    color: #aaa;
+    font-size: 13px;
+}
+
+.video-date {
+    margin-top: 4px;
+    color: #717171;
+    font-size: 12px;
+}
+
+/* =========================
+   PLAYER
+========================= */
+
+#playerSection {
+    display: none;
+    margin-bottom: 30px;
+}
+
+.player-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 1100px;
+    margin: auto;
+    aspect-ratio: 16 / 9;
+    background: #000;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+#player {
+    width: 100%;
+    height: 100%;
+    border: 0;
+}
+
+.close-player {
+    margin-top: 12px;
+    border: none;
+    background: #272727;
+    color: white;
+    padding: 9px 15px;
+    border-radius: 18px;
+    cursor: pointer;
+}
+
+.close-player:hover {
+    background: #3f3f3f;
+}
+
+/* =========================
+   LOADING / EMPTY
+========================= */
+
+.message {
+    text-align: center;
+    padding: 60px 20px;
+    color: #aaa;
+}
+
+.spinner {
+    width: 35px;
+    height: 35px;
+    border: 4px solid #333;
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 0 auto 15px;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* =========================
+   SHORTS
+========================= */
+
+#shortsFeed {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 5000;
+    background: #000;
+}
+
+.shorts-topbar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 62px;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 18px;
+    background: linear-gradient(
+        to bottom,
+        rgba(0,0,0,0.8),
+        rgba(0,0,0,0)
+    );
+}
+
+.shorts-logo {
+    font-size: 20px;
+    font-weight: 800;
+}
+
+.shorts-logo span {
+    color: #ff0000;
+}
+
+.close-shorts {
+    border: none;
+    background: rgba(39,39,39,0.9);
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+.close-shorts:hover {
+    background: #3f3f3f;
+}
+
+.shorts-container {
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    scroll-snap-type: y mandatory;
+    background: #000;
+}
+
+.short-item {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    min-height: 100vh;
+    scroll-snap-align: start;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #000;
+    overflow: hidden;
+}
+
+.short-video {
+    width: min(100%, 500px);
+    height: 100%;
+    border: none;
+    background: #000;
+}
+
+.short-gradient {
+    position: absolute;
+    pointer-events: none;
+    inset: auto 0 0;
+    height: 45%;
+    background: linear-gradient(
+        transparent,
+        rgba(0,0,0,0.9)
+    );
+}
+
+.short-info {
+    position: absolute;
+    left: 20px;
+    right: 85px;
+    bottom: 30px;
+    z-index: 10;
+}
+
+.short-title {
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.4;
+    margin-bottom: 8px;
+}
+
+.short-channel {
+    font-size: 14px;
+    color: #ddd;
+}
+
+.short-actions {
+    position: absolute;
+    right: 18px;
+    bottom: 35px;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.short-action {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(39,39,39,0.85);
+    color: white;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+.short-action:hover {
+    background: rgba(63,63,63,0.95);
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 700px) {
+    header {
+        height: 56px;
+        padding: 0 10px;
+        gap: 8px;
+    }
+
+    .logo {
+        font-size: 18px;
+    }
+
+    .search-area {
+        max-width: none;
+    }
+
+    .search-area input {
+        height: 38px;
+        font-size: 13px;
+    }
+
+    .search-area button {
+        height: 38px;
+        width: 48px;
+    }
+
+    .shorts-header-btn {
+        padding: 9px 11px;
+        font-size: 12px;
+    }
+
+    main {
+        padding: 12px;
+    }
+
+    .video-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px 10px;
+    }
+
+    .video-info {
+        gap: 7px;
+    }
+
+    .channel-avatar {
+        width: 28px;
+        height: 28px;
+        flex-basis: 28px;
+        font-size: 11px;
+    }
+
+    .video-title {
+        font-size: 13px;
+    }
+
+    .channel-name,
+    .video-date {
+        font-size: 11px;
+    }
+}
+</style>
+
+<style>
+#tubezoneAd{width:100%;max-width:1100px;margin:0 auto 24px;background:#202020;color:#fff;border:1px solid #383838;border-radius:16px;padding:16px 20px;box-shadow:0 8px 30px rgba(0,0,0,.35)}
+.tz-ad-label{font-size:10px;color:#aaa;text-align:center;margin-bottom:8px;letter-spacing:1px}.tz-ad-content{display:flex;align-items:center;gap:12px}.tz-ad-icon{font-size:28px}.tz-ad-content strong{font-size:16px}.tz-ad-content p{margin:4px 0 0;color:#aaa;font-size:13px}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="logo">
+        Tube<span>Zone</span>
+    </div>
+
+    <div class="search-area">
+        <input
+            id="searchInput"
+            type="text"
+            placeholder="Search"
+            autocomplete="off"
+        >
+        <button id="searchBtn">🔍</button>
+    </div>
+
+    <button id="premiumBtn" onclick="openPremium()">👑 Premium</button>
+    <span id="premiumBadge">👑 PREMIUM</span>
+
+    <button class="shorts-header-btn" id="shortsBtn">
+        ▶ Shorts
+    </button>
+</header>
+
+<nav id="channelNav"></nav>
+
+<main>
+
+    <section id="playerSection">
+        <div class="player-wrapper">
+            <iframe
+                id="player"
+                allow="autoplay; encrypted-media; picture-in-picture"
+                allowfullscreen>
+            </iframe>
+        </div>
+
+        <button class="close-player" id="closePlayer">
+            ✕ Close video
+        </button>
+    </section>
+
+    <h2 class="section-title" id="sectionTitle">
+        Home
+    </h2>
+
+    <div id="message" class="message" style="display:none;"></div>
+
+    <div id="homeAdSlot"></div>
+
+    <div id="videoGrid" class="video-grid"></div>
+
+</main>
+
+<!-- =========================
+     SHORTS SCREEN
+========================= -->
+
+<section id="shortsFeed">
+
+    <div class="shorts-topbar">
+        <div class="shorts-logo">
+            Tube<span>Zone</span> · Shorts
+        </div>
+
+        <button class="close-shorts" id="closeShorts">
+            ✕
+        </button>
+    </div>
+
+    <div class="shorts-container" id="shortsContainer"></div>
+
+</section>
+
+<script src="config.js?v=20260924"></script>
+
+<script>
+/* =========================================
+   TUBEZONE
+========================================= */
+
+const API_KEY = window.YT_API_KEY || window.YOUTUBE_API_KEY || window.YOUTUBE_KEY;
+
+const creators = [
+    {
+        name: "Caylus",
+        query: "Caylus"
+    },
+    {
+        name: "Foltyn Family",
+        query: "FoltynFamily"
+    },
+    {
+        name: "Steak",
+        query: "steak"
+    },
+    {
+        name: "Nico",
+        query: "nico"
+    },
+    {
+        name: "The Stradman",
+        query: "TheStradman"
+    },
+    {
+        name: "FlameFragsMC",
+        query: "FlameFragsMC"
+    },
+    {
+        name: "MrBeast",
+        query: "MrBeast"
+    },
+    {
+        name: "Koopekool",
+        query: "Koopekool"
+    },
+    {
+        name: "Cruz",
+        query: "Cruz"
+    }
+];
+
+let currentRequest = 0;
+let shortsRequest = 0;
+let shortObserver = null;
+
+/* =========================================
+   API
+========================================= */
+
+async function youtubeAPI(endpoint, params = {}) {
+
+    if (!API_KEY || API_KEY === "YOUR_ACTUAL_API_KEY_HERE") {
+        throw new Error(
+            "YouTube API key is missing. Put your key in config.js."
+        );
+    }
+
+    const url = new URL(
+        "https://www.googleapis.com/youtube/v3/" + endpoint
+    );
+
+    Object.entries(params).forEach(([key, value]) => {
+        url.searchParams.set(key, value);
+    });
+
+    url.searchParams.set("key", API_KEY);
+
+    const response = await fetch(url);
+
+    if (!response.ok) {
+        let errorText = "YouTube API request failed.";
+
+        try {
+            const data = await response.json();
+
+            if (data.error && data.error.message) {
+                errorText = data.error.message;
+            }
+        } catch {}
+
+        throw new Error(errorText);
+    }
+
+    return response.json();
+}
+
+/* =========================================
+   CHANNEL NAV
+========================================= */
+
+function buildChannelNav() {
+
+    const nav = document.getElementById("channelNav");
+
+    nav.innerHTML = "";
+
+    const homeButton = document.createElement("button");
+
+    homeButton.className = "channel-button active";
+    homeButton.textContent = "Home";
+
+    homeButton.onclick = () => {
+
+        document
+            .querySelectorAll(".channel-button")
+            .forEach(btn => btn.classList.remove("active"));
+
+        homeButton.classList.add("active");
+
+        showHome();
+    };
+
+    nav.appendChild(homeButton);
+
+    creators.forEach(creator => {
+
+        const button = document.createElement("button");
+
+        button.className = "channel-button";
+        button.textContent = creator.name;
+
+        button.onclick = () => {
+
+            document
+                .querySelectorAll(".channel-button")
+                .forEach(btn => btn.classList.remove("active"));
+
+            button.classList.add("active");
+
+            loadChannel(creator);
+        };
+
+        nav.appendChild(button);
+    });
+}
+
+/* =========================================
+   HOME
+========================================= */
+
+function showHome() {
+
+    currentRequest++;
+
+    document.getElementById("sectionTitle").textContent =
+        "TubeZone";
+
+    closePlayer();
+
+    document.getElementById("message").style.display = "none";
+
+    document.getElementById("videoGrid").innerHTML = `
+        <div class="message" style="display:block;grid-column:1/-1;">
+            Choose a channel above or search for a video.
+        </div>
+    `;
+}
+
+/* =========================================
+   FIND CHANNEL
+========================================= */
+
+async function findChannelId(query) {
+
+    const data = await youtubeAPI("search", {
+        part: "snippet",
+        q: query,
+        type: "channel",
+        maxResults: 1
+    });
+
+    if (!data.items || !data.items.length) {
+        throw new Error("Channel not found.");
+    }
+
+    return data.items[0].id.channelId;
+}
+
+/* =========================================
+   LOAD CHANNEL
+========================================= */
+
+async function loadChannel(creator) {
+
+    const requestId = ++currentRequest;
+
+    closePlayer();
+
+    document.getElementById("sectionTitle").textContent =
+        creator.name;
+
+    showLoading();
+
+    try {
+
+        const channelId = await findChannelId(creator.query);
+
+        if (requestId !== currentRequest) return;
+
+        const channelData = await youtubeAPI("channels", {
+            part: "contentDetails,snippet",
+            id: channelId
+        });
+
+        if (requestId !== currentRequest) return;
+
+        if (!channelData.items || !channelData.items.length) {
+            throw new Error("Could not load channel.");
+        }
+
+        const uploadsPlaylist =
+            channelData.items[0].contentDetails.relatedPlaylists.uploads;
+
+        const videos = [];
+
+        let pageToken = "";
+
+        do {
+
+            if (requestId !== currentRequest) return;
+
+            const params = {
+                part: "snippet",
+                playlistId: uploadsPlaylist,
+                maxResults: 50
+            };
+
+            if (pageToken) {
+                params.pageToken = pageToken;
+            }
+
+            const page = await youtubeAPI(
+                "playlistItems",
+                params
+            );
+
+            if (requestId !== currentRequest) return;
+
+            if (page.items) {
+                videos.push(...page.items);
+            }
+
+            pageToken = page.nextPageToken || "";
+
+        } while (pageToken);
+
+        if (requestId !== currentRequest) return;
+
+        renderVideos(videos);
+
+    } catch (error) {
+
+        if (requestId !== currentRequest) return;
+
+        showError(error.message);
+    }
+}
+
+/* =========================================
+   SEARCH
+========================================= */
+
+async function searchVideos(query) {
+
+    if (!query.trim()) return;
+
+    const requestId = ++currentRequest;
+
+    closePlayer();
+
+    document.getElementById("sectionTitle").textContent =
+        `Search: ${query}`;
+
+    showLoading();
+
+    try {
+
+        const data = await youtubeAPI("search", {
+            part: "snippet",
+            q: query,
+            type: "video",
+            maxResults: 50
+        });
+
+        if (requestId !== currentRequest) return;
+
+        renderVideos(data.items || []);
+
+    } catch (error) {
+
+        if (requestId !== currentRequest) return;
+
+        showError(error.message);
+    }
+}
+
+/* =========================================
+   RENDER VIDEOS
+========================================= */
+
+function renderVideos(items) {
+
+    const grid = document.getElementById("videoGrid");
+
+    document.getElementById("message").style.display = "none";
+
+    grid.innerHTML = "";
+
+    if (!items.length) {
+
+        grid.innerHTML = `
+            <div class="message" style="display:block;grid-column:1/-1;">
+                No videos found.
+            </div>
+        `;
+
+        return;
+    }
+
+    const seen = new Set();
+
+    items.forEach(item => {
+
+        const videoId =
+            item.contentDetails?.videoId ||
+            item.id?.videoId;
+
+        if (!videoId || seen.has(videoId)) return;
+
+        seen.add(videoId);
+
+        const snippet = item.snippet;
+
+        const card = document.createElement("div");
+
+        card.className = "video-card";
+
+        const title =
+            snippet?.title || "Untitled video";
+
+        const channel =
+            snippet?.channelTitle || "Unknown channel";
+
+        const date =
+            snippet?.publishedAt
+                ? new Date(
+                    snippet.publishedAt
+                  ).toLocaleDateString()
+                : "";
+
+        const thumbnail =
+            snippet?.thumbnails?.high?.url ||
+            snippet?.thumbnails?.medium?.url ||
+            snippet?.thumbnails?.default?.url ||
+            "";
+
+        card.innerHTML = `
+            <img
+                class="thumbnail"
+                src="${escapeHTML(thumbnail)}"
+                alt=""
+                loading="lazy"
+            >
+
+            <div class="video-info">
+
+                <div class="channel-avatar">
+                    ${escapeHTML(
+                        channel.charAt(0).toUpperCase()
+                    )}
+                </div>
+
+                <div class="video-text">
+
+                    <h3 class="video-title">
+                        ${escapeHTML(title)}
+                    </h3>
+
+                    <div class="channel-name">
+                        ${escapeHTML(channel)}
+                    </div>
+
+                    <div class="video-date">
+                        ${escapeHTML(date)}
+                    </div>
+
+                </div>
+
+            </div>
+        `;
+
+        card.onclick = () => playVideo(videoId);
+
+        grid.appendChild(card);
+    });
+}
+
+/* =========================================
+   PLAYER
+========================================= */
+
+function playVideo(videoId) {
+
+    const playerSection =
+        document.getElementById("playerSection");
+
+    const player =
+        document.getElementById("player");
+
+    player.src =
+        "https://www.youtube.com/embed/" +
+        encodeURIComponent(videoId) +
+        "?autoplay=1&rel=0";
+
+    playerSection.style.display = "block";
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+}
+
+function closePlayer() {
+
+    const playerSection =
+        document.getElementById("playerSection");
+
+    const player =
+        document.getElementById("player");
+
+    player.src = "";
+
+    playerSection.style.display = "none";
+}
+
+/* =========================================
+   SHORTS
+========================================= */
+
+async function loadShorts() {
+
+    const requestId = ++shortsRequest;
+
+    const container =
+        document.getElementById("shortsContainer");
+
+    container.innerHTML = `
+        <div class="message">
+            <div class="spinner"></div>
+            Loading Shorts...
+        </div>
+    `;
+
+    try {
+
+        const queries = [
+            "shorts",
+            "viral shorts",
+            "funny shorts",
+            "gaming shorts",
+            "popular shorts"
+        ];
+
+        const allVideos = [];
+
+        for (const query of queries) {
+
+            if (requestId !== shortsRequest) return;
+
+            const data = await youtubeAPI("search", {
+                part: "snippet",
+                q: query,
+                type: "video",
+                videoDuration: "short",
+                maxResults: 50
+            });
+
+            if (data.items) {
+                allVideos.push(...data.items);
+            }
+        }
+
+        if (requestId !== shortsRequest) return;
+
+        const unique = [];
+        const seen = new Set();
+
+        allVideos.forEach(item => {
+
+            const id = item.id?.videoId;
+
+            if (!id || seen.has(id)) return;
+
+            seen.add(id);
+
+            unique.push(item);
+        });
+
+        /* Shuffle */
+        for (let i = unique.length - 1; i > 0; i--) {
+
+            const j =
+                Math.floor(Math.random() * (i + 1));
+
+            [unique[i], unique[j]] =
+                [unique[j], unique[i]];
+        }
+
+        renderShorts(unique.slice(0, 100));
+
+    } catch (error) {
+
+        container.innerHTML = `
+            <div class="message">
+                Could not load Shorts.<br><br>
+                ${escapeHTML(error.message)}
+            </div>
+        `;
+    }
+}
+
+/* =========================================
+   RENDER SHORTS
+========================================= */
+
+function renderShorts(items) {
+
+    const container =
+        document.getElementById("shortsContainer");
+
+    container.innerHTML = "";
+
+    items.forEach(item => {
+
+        const videoId = item.id.videoId;
+
+        const title =
+            item.snippet?.title || "Short";
+
+        const channel =
+            item.snippet?.channelTitle || "";
+
+        const short = document.createElement("div");
+
+        short.className = "short-item";
+
+        short.innerHTML = `
+
+            <iframe
+                class="short-video"
+                data-video="${escapeHTML(videoId)}"
+                src="https://www.youtube.com/embed/${encodeURIComponent(videoId)}?enablejsapi=1&rel=0&playsinline=1&mute=1"
+                allow="autoplay; encrypted-media; picture-in-picture"
+                allowfullscreen>
+            </iframe>
+
+            <div class="short-gradient"></div>
+
+            <div class="short-info">
+
+                <div class="short-title">
+                    ${escapeHTML(title)}
+                </div>
+
+                <div class="short-channel">
+                    @${escapeHTML(channel)}
+                </div>
+
+            </div>
+
+            <div class="short-actions">
+
+                <button
+                    class="short-action"
+                    onclick="alert('Like added!')">
+                    👍
+                </button>
+
+                <button
+                    class="short-action"
+                    onclick="shareShort('${escapeHTML(videoId)}')">
+                    ↗
+                </button>
+
+            </div>
+        `;
+
+        container.appendChild(short);
+    });
+
+    setupShortsObserver();
+}
+
+/* =========================================
+   SHORTS OBSERVER
+========================================= */
+
+function setupShortsObserver() {
+
+    if (shortObserver) {
+        shortObserver.disconnect();
+    }
+
+    shortObserver =
+        new IntersectionObserver(
+            entries => {
+
+                entries.forEach(entry => {
+
+                    const iframe =
+                        entry.target.querySelector(
+                            ".short-video"
+                        );
+
+                    if (!iframe) return;
+
+                    if (entry.isIntersecting) {
+
+                        activateShort(iframe);
+
+                    } else {
+
+                        stopShort(iframe);
+                    }
+                });
+
+            },
+            {
+                threshold: 0.75
+            }
+        );
+
+    document
+        .querySelectorAll(".short-item")
+        .forEach(item => {
+            shortObserver.observe(item);
+        });
+}
+
+/* =========================================
+   SHORT ACTIVATION
+========================================= */
+
+function activateShort(iframe) {
+
+    const src =
+        iframe.src;
+
+    if (!src.includes("autoplay=1")) {
+
+        iframe.src =
+            src +
+            "&autoplay=1";
+    }
+}
+
+function stopShort(iframe) {
+
+    const src =
+        iframe.src;
+
+    if (src.includes("autoplay=1")) {
+
+        iframe.src =
+            src.replace("&autoplay=1", "");
+    }
+}
+
+/* =========================================
+   SHARE
+========================================= */
+
+function shareShort(videoId) {
+
+    const url =
+        "https://www.youtube.com/shorts/" +
+        videoId;
+
+    if (
+        navigator.share
+    ) {
+
+        navigator.share({
+            title: "TubeZone Short",
+            url: url
+        });
+
+    } else {
+
+        navigator.clipboard
+            ?.writeText(url);
+
+        alert("Short link copied!");
+    }
+}
+
+/* =========================================
+   ENTER / EXIT SHORTS
+========================================= */
+
+function enterShorts() {
+
+    document.getElementById("shortsFeed")
+        .style.display = "block";
+
+    document.body.style.overflow = "hidden";
+
+    loadShorts();
+}
+
+function exitShorts() {
+
+    document.getElementById("shortsFeed")
+        .style.display = "none";
+
+    document.body.style.overflow = "";
+
+    if (shortObserver) {
+        shortObserver.disconnect();
+    }
+
+    document.getElementById("shortsContainer")
+        .innerHTML = "";
+}
+
+/* =========================================
+   LOADING / ERRORS
+========================================= */
+
+function showLoading() {
+
+    const message =
+        document.getElementById("message");
+
+    message.style.display = "block";
+
+    message.innerHTML = `
+        <div class="spinner"></div>
+        Loading videos...
+    `;
+
+    document.getElementById("videoGrid")
+        .innerHTML = "";
+}
+
+function showError(error) {
+
+    const message =
+        document.getElementById("message");
+
+    message.style.display = "block";
+
+    message.innerHTML = `
+        <strong>Something went wrong.</strong>
+        <br><br>
+        ${escapeHTML(error)}
+    `;
+
+    document.getElementById("videoGrid")
+        .innerHTML = "";
+}
+
+/* =========================================
+   ESCAPE HTML
+========================================= */
+
+function escapeHTML(value) {
+
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+/* =========================================
+   EVENTS
+========================================= */
+
+document
+    .getElementById("searchBtn")
+    .addEventListener("click", () => {
+
+        searchVideos(
+            document
+                .getElementById("searchInput")
+                .value
+        );
+    });
+
+document
+    .getElementById("searchInput")
+    .addEventListener("keydown", event => {
+
+        if (event.key === "Enter") {
+
+            searchVideos(
+                event.target.value
+            );
+        }
+    });
+
+document
+    .getElementById("closePlayer")
+    .addEventListener("click", closePlayer);
+
+document
+    .getElementById("shortsBtn")
+    .addEventListener("click", enterShorts);
+
+document
+    .getElementById("closeShorts")
+    .addEventListener("click", exitShorts);
+
+document.addEventListener("keydown", event => {
+
+    if (
+        event.key === "Escape" &&
+        document.getElementById("shortsFeed")
+            .style.display === "block"
+    ) {
+
+        exitShorts();
+    }
+});
+
+/* =========================================
+   START
+========================================= */
+
+buildChannelNav();
+showHome();
+
+</script>
+
+
+
+<!-- =========================
+     TUBEZONE PREMIUM ADMIN
+========================= -->
+<style>
+#premiumBtn{border:0;background:linear-gradient(135deg,#ffd700,#ff9d00);color:#111;padding:10px 15px;border-radius:22px;font-weight:800;cursor:pointer;white-space:nowrap}
+#premiumBtn:hover{filter:brightness(1.08)}
+#premiumBadge{display:none;background:linear-gradient(135deg,#ffd700,#ff9d00);color:#111;padding:5px 9px;border-radius:999px;font-size:12px;font-weight:900;white-space:nowrap}
+#premiumModal{display:none;position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.78);align-items:center;justify-content:center;padding:20px}
+.premium-box{width:min(420px,100%);background:#181818;border:1px solid #333;border-radius:20px;padding:28px;box-shadow:0 20px 70px rgba(0,0,0,.6);text-align:center}
+.premium-crown{font-size:48px}.premium-title{font-size:28px;font-weight:900;color:#ffd700}.premium-subtitle{color:#aaa;margin:8px 0 20px}
+#premiumPasscode{width:100%;box-sizing:border-box;padding:14px;border-radius:12px;border:1px solid #444;background:#101010;color:white;font-size:16px;outline:none;margin-bottom:12px}
+.premium-action,.premium-close{width:100%;padding:13px;border:0;border-radius:12px;font-weight:800;cursor:pointer}.premium-action{background:#ffd700;color:#111}.premium-close{margin-top:10px;background:#303030;color:white}
+#premiumStatus{margin-top:15px;font-weight:700;min-height:20px}
+body.tubezone-premium{background:radial-gradient(circle at top,rgba(255,215,0,.08),transparent 35%),#0f0f0f}
+body.tubezone-premium header{border-bottom-color:#5b4b00}
+</style>
+
+<script>
+const TUBEZONE_ADMIN_PASSCODE="TZ-ADMIN-9472-PREMIUM";
+function isTubeZonePremium(){return localStorage.getItem("tubezonePremium")==="true"}
+function updatePremiumUI(){
+  const badge=document.getElementById("premiumBadge");
+  updateTubeZoneAds();
+  if(isTubeZonePremium()){
+    document.body.classList.add("tubezone-premium");
+    if(badge) badge.style.display="inline-flex";
+  }else{
+    document.body.classList.remove("tubezone-premium");
+    if(badge) badge.style.display="none";
+  }
+}
+function updateTubeZoneAds(){
+  const slot=document.getElementById("homeAdSlot");
+  if(!slot) return;
+  const old=document.getElementById("tubezoneAd");
+  if(isTubeZonePremium()){ if(old) old.remove(); return; }
+  if(old) return;
+  const ad=document.createElement("div"); ad.id="tubezoneAd";
+  ad.innerHTML=`<div class="tz-ad-label">ADVERTISEMENT</div><div class="tz-ad-content"><span class="tz-ad-icon">📢</span><div><strong>TubeZone</strong><p>Ads are shown here while Premium is not unlocked.</p></div></div>`;
+  slot.appendChild(ad);
+  clearTimeout(window.tubeZoneAdTimer);
+  window.tubeZoneAdTimer=setTimeout(()=>{
+    const currentAd=document.getElementById("tubezoneAd");
+    if(currentAd) currentAd.remove();
+  },5000);
+}
+
+function openPremium(){
+  const modal=document.getElementById("premiumModal");
+  const input=document.getElementById("premiumPasscode");
+  const status=document.getElementById("premiumStatus");
+  modal.style.display="flex";
+  input.value="";
+  status.textContent=isTubeZonePremium()?"👑 Premium is active.":"Admin access required.";
+  status.style.color=isTubeZonePremium()?"#ffd700":"#aaa";
+  setTimeout(()=>input.focus(),50);
+}
+function closePremium(){document.getElementById("premiumModal").style.display="none"}
+function unlockPremium(){
+  const input=document.getElementById("premiumPasscode");
+  const status=document.getElementById("premiumStatus");
+  if(input.value.trim()===TUBEZONE_ADMIN_PASSCODE){
+    localStorage.setItem("tubezonePremium","true");
+    localStorage.setItem("tubezonePremiumAdmin","true");
+    status.textContent="👑 Premium unlocked!";
+    status.style.color="#ffd700";
+    updatePremiumUI();
+    updateTubeZoneAds();
+    setTimeout(closePremium,900);
+  }else{
+    status.textContent="❌ Incorrect admin passcode.";
+    status.style.color="#ff5555";
+  }
+}
+function revokePremium(){
+  localStorage.removeItem("tubezonePremium");
+  localStorage.removeItem("tubezonePremiumAdmin");
+  updatePremiumUI();
+  updateTubeZoneAds();
+}
+window.addEventListener("DOMContentLoaded",updatePremiumUI);
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closePremium();if(e.key==="Enter"&&document.getElementById("premiumModal").style.display==="flex")unlockPremium()});
+</script>
+
+<div id="premiumModal">
+  <div class="premium-box">
+    <div class="premium-crown">👑</div>
+    <div class="premium-title">TubeZone Premium</div>
+    <div class="premium-subtitle">Admin-only access</div>
+    <input id="premiumPasscode" type="password" placeholder="Enter admin passcode" autocomplete="off">
+    <button class="premium-action" onclick="unlockPremium()">Unlock Premium</button>
+    <div id="premiumStatus"></div>
+    <button class="premium-close" onclick="closePremium()">Close</button>
+  </div>
+</div>
+
+</body>
+</html>
